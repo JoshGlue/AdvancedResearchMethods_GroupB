@@ -1,5 +1,5 @@
 # Advanced Research Methods (Group B)
-Experiment of the course Advanced Research Methods at Radboud University
+Experiment of the course Advanced Research Methods at Radboud University By Ankur Ankan, Joshua van Kleef, Lino Vliex and Luc Wijnen
 
 The script that is used is mainly the script that MSc. Jana Krutwig created with minor changes to fit our project. Dr. Makiko Sadakata is the owner of the sound files that are used in this project. She provided us the sound files via the Radboud Blackboard page.
 These can be found here: 
