@@ -94,12 +94,6 @@ fixation = visual.ShapeStim(win,
 #instr_1 = 'Please focus on the fixation cross. You are gonna hear sounds.... Please indicate which of the two displayed words your heard last'
 #instr_end = 'This is the end of the task.\n Thank you for participating!'
 
-instr_welcome = visual.TextStim(win, text = 'Welkom bij dit onderzoek!')
-question_geslacht = visual.TextStim(win, text = 'Ben jij een man of vrouw?(M/V)')
-question_age = 'Wat is je leeftijd?'
-question_music = visual.TextStim(win, text = 'Speel je een muziekinstrument?(J/N)')
-question_limburgian = visual.TextStim(win, text = 'Kan jij een Limburgs dialect spreken?(J/N)')
-question_impairment = visual.TextStim(win, text = 'Heb je ooit gehoorproblemen gehad?(J/N)')
 instr_1 = visual.TextStim(win, text='Je krijgt twee geluidsfragmenten te horen waar "asa" wordt gezegd.'+
             ' Aan jou de taak om te kijken of jij het verschil kunt horen tussen beide geluidsfragmenten.'+
             ' Of er een verschil is, is af en toe moeilijk te horen, aarzel niet te lang en ga op je intuitie af.'+
