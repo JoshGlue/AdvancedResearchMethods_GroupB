@@ -13,47 +13,52 @@ import os  # handy system and path functions
 
 
 # setup pop-up window: define participant's ID, counter and day of training
-expName = 'morphedIdentTask'
-expInfo = {'participant':'', 'day': '1', 'counter':'1'}
+expName = 'Auditory Tonal Difference'
+expInfo = {'participant':'' , 
+'Man/Vrouw' : ['Man', 'Vrouw'], 
+'Leeftijd': '',
+'Heb je gehoorproblemen?': ['Nee', 'Ja'], 
+ 'Speel je een muziekinstrument?': ['Nee', 'Ja'],
+ 'Kan jij een Limburgs dialect spreken?': ['Nee', 'Ja']
+ }
 dlg = gui.DlgFromDict(dictionary=expInfo, title=expName)
 if dlg.OK == False: core.quit()  # user pressed cancel
-
-# restrict choice of counter to 1 or 2
-while True:
-    if expInfo['counter'] != '1' and expInfo['counter'] != '2':
-        dlg = gui.DlgFromDict(dictionary=expInfo, title=expName)
-        if dlg.OK == False: core.quit()  # user pressed cancel
-    else:
-        break
     
 # add info to info array
 expInfo['date'] = data.getDateStr()  # add a simple timestamp
 expInfo['expName'] = expName
 
-
-
+gender = expInfo['Man/Vrouw']
+age = expInfo['Leeftijd']
+hearing_impairment = expInfo['Heb je gehoorproblemen?']
+playing_music = expInfo['Speel je een muziekinstrument?']
+limburgian_dialect = expInfo['Kan jij een Limburgs dialect spreken?']
 #------------- VARIABLES -----------------------
 
 #win = visual.Window([700,500], monitor="testMonitor", units="cm", fullscr=False)
 win = visual.Window([1280, 800], monitor="testMonitor", fullscr=True)
 
 # extract variables from pop-up window (all strings!)
-counter = expInfo['counter']       
+counter = '1'      
 participantID = expInfo['participant']
-day = expInfo['day']
+day = '1'
 date = expInfo['date']
 
 
 # stim words
 stim1 = 'asa1343'
-# create stim list with 11 elements (morphed continuum)
+# create stim list with elements from 2 - 9 (50% of stimuli)
 stim = []
-for i in range(9):
-    stim.append(stim1 + '_' + str(i+1) + '.wav')
+for i in range(2,10):
+    stim.append(stim1 + '_' + str(i) + '.wav')
+# extend stim list with element 1 (50% of stimuli)
+totalstim = len(stim)
+for i in range(totalstim):
+	stim.append(stim1 + '_' + str(1) + '.wav')
 print stim
 
 # n of repetitions for the minimal unit (ntrials equals nrep * minimal unit)
-nRep = 10
+nRep = 5
 nTrials = nRep*len(stim)
 
 # create random sequence with STIM selection for all trials
@@ -61,6 +66,7 @@ stimSelect = []
 for j in range(nRep):
     for i in range(len(stim)):
             stimSelect.append(stim[i])
+
 shuffle(stimSelect)
 print stimSelect
 print len(stimSelect)
@@ -88,17 +94,19 @@ fixation = visual.ShapeStim(win,
 #instr_1 = 'Please focus on the fixation cross. You are gonna hear sounds.... Please indicate which of the two displayed words your heard last'
 #instr_end = 'This is the end of the task.\n Thank you for participating!'
 
-instr_welcome = visual.TextStim(win, text = 'wELK')
-instr_1 = visual.TextStim(win, text='The following task is very similar to the one you have done before.'+
-            ' Again you will hear words followed by a decision between two options. This time you have to indicate which'+
-            ' of the two English words you heard: VAT or VET. /n Sometimes it might be hard to judge.'+
-            ' In that case try to make a quick and intuitive decision.'+
+instr_welcome = visual.TextStim(win, text = 'Welkom bij dit onderzoek!')
+question_geslacht = visual.TextStim(win, text = 'Ben jij een man of vrouw?(M/V)')
+question_age = 'Wat is je leeftijd?'
+question_music = visual.TextStim(win, text = 'Speel je een muziekinstrument?(J/N)')
+question_limburgian = visual.TextStim(win, text = 'Kan jij een Limburgs dialect spreken?(J/N)')
+question_impairment = visual.TextStim(win, text = 'Heb je ooit gehoorproblemen gehad?(J/N)')
+instr_1 = visual.TextStim(win, text='Je krijgt twee geluidsfragmenten te horen waar "asa" wordt gezegd.'+
+            ' Aan jou de taak om te kijken of jij het verschil kunt horen tussen beide geluidsfragmenten.'+
+            ' Of er een verschil is, is af en toe moeilijk te horen, aarzel niet te lang en ga op je intuitie af.'+
             '\n'+
-            'In total, the task will take around 3 minutes. Please try again to be as accurate and as fast as possible.\n'+
+            'Het zal ongeveer 3 minuten duren.\n'+
             '\n'+
-            'Do you have any questions?\n'+
-            '\n'+
-            'Press button X to start the task')
+            'Heb je nog vragen? Zo niet, dan kan je op de rechterpijl klikken om te beginnen. Succes!')
 instr_end = visual.TextStim(win, text = 'This is the end of the task.\n Thank you for participating!')
 
 
@@ -148,9 +156,15 @@ showText(win, '')       # blank
 core.wait(0.5)
 
 # open/ create outputfile
-outputfile= open("_OUTPUT_morphedIdenTask_{}_{}_{}.csv".format(participantID, day, date), 'wb')
+backgroundinfo= open("{}_{}_{}_OUTPUT_limburgiantonaldifference_backgroundinfo.csv".format(participantID, day, date), 'wb')
+writer_background = csv.writer(backgroundinfo, delimiter=";")
+writer_background.writerow(['gender', 'age', 'hearing_impairment',' playing_music', 'limburgian_dialect'])
+writer_background.writerow([gender, age, hearing_impairment,playing_music,limburgian_dialect])
+
+
+outputfile= open("{}_{}_{}_OUTPUT_limburgiantonaldifference.csv".format(participantID, day, date), 'wb')
 writer = csv.writer(outputfile, delimiter=";")
-writer.writerow(['trial', 'stim', 'counterChoice (1/2)', 't_soundPlay',' t_choice', 't_Response', 'RT', 'responseButton', 'Hetzelfde', 'Verschillend'])
+writer.writerow(['trial', 'stim', 't_soundPlay',' t_choice', 't_Response', 'RT', 'responseButton', 'Hetzelfde', 'Verschillend'])
 
 
 timer = core.Clock()
@@ -159,7 +173,7 @@ for i in range(len(stimSelect)):
 #for i in range(5):      # for test-run
     # timing
     timer.reset()
-    s0 = sound.Sound(value = stim[0], secs = 1)
+    s0 = sound.Sound(value = stim1 + '_' + str(1) + '.wav', secs = 1)
 
     # load/prepare audio (secs is expected length but will not determine actual length? - see core.wait below)
     s = sound.Sound(value = stimSelect[i], secs = 1)
@@ -197,19 +211,19 @@ for i in range(len(stimSelect)):
     VAT, VET = 0,0
     if counter=='1':  # determines the position of the two options for response, e.g. 'fan' left or write of fix  
         if buttonPressed == ['left']:
-            print 'response: VAT'
+            print 'response: Hetzelfde'
             VAT = 1
         elif buttonPressed == ['right']:
-            print 'response: VET'
+            print 'response: Verschillend'
             VET = 1
         else:
             print 'wrong response'
     elif counter=='2':
         if buttonPressed == ['left']:
-            print 'response: VET'
+            print 'response: Verschillend'
             VET = 1
         elif buttonPressed == ['right']:
-            print 'response: VAT'
+            print 'response: Hetzelfde'
             VAT = 1
         else:
             print 'wrong response'
@@ -219,7 +233,7 @@ for i in range(len(stimSelect)):
     # write in output file every trial
     RT = t_response - t_choice
     # header: 'trial', 'stim', 'counterChoice (1/2)', 't_soundPlay',' t_choice', 't_Response', 'RT', 'responseButton', 'VAT_classified', ' VET_classified'])
-    writer.writerow([len(stim) + i+1, stimSelect[i], counter,  
+    writer.writerow([len(stim) + i+1, stimSelect[i],  
                     str(round(t_soundOnset, 3)), str(round(t_choice,3)), str(round(t_response,3)),
                     str(round(RT,3)), buttonPressed, VAT, VET
                     ])
