@@ -6,6 +6,12 @@ __pycache__/
 # C extensions
 *.so
 
+# Output of psychoPy
+*.csv
+
+#Sound files of Makiko
+*.wav
+
 # Distribution / packaging
 .Python
 env/
