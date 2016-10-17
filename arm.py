@@ -96,8 +96,8 @@ fixation = visual.ShapeStim(win,
 instr_welcome = visual.TextStim(win, text='Welkom bij dit onderzoek.')
 
 instr_1 = visual.TextStim(win, text='Je krijgt twee geluidsfragmenten te horen waar "asa" wordt gezegd.'+
-            ' Aan jou de taak om te kijken of jij het verschil kunt horen tussen beide geluidsfragmenten.'+
-            ' Of er een verschil is, is af en toe moeilijk te horen, aarzel niet te lang en ga op je intuitie af.'+
+            ' Aan jou de taak om te luisteren of het tweede geluidsfragment hetzelfde is als het eerste.'+
+            ' Aarzel niet te lang en ga op je intuitie af.'+
             '\n'+
             'Het zal ongeveer 3 minuten duren.\n'+
             '\n'+
@@ -141,7 +141,7 @@ backgroundinfo.close()
 
 outputfile= open("data/{}_{}_{}_OUTPUT_limburgiantonaldifference.csv".format(participantID, day, date), 'wb')
 writer = csv.writer(outputfile, delimiter=";")
-writer.writerow(['trial', 'stim', 't_soundPlay',' t_choice', 't_Response', 'RT', 'responseButton', 'Same', 'Different'])
+writer.writerow(['partipantid', 'gender', 'age', 'hearing_impairment',' playing_music', 'limburgian_dialect', 'trial', 'stim', 't_soundPlay',' t_choice', 't_Response', 'RT', 'responseButton', 'Same', 'Different'])
 
 
 timer = core.Clock()
@@ -210,7 +210,7 @@ for i in range(len(stimSelect)):
     # write in output file every trial
     RT = t_response - t_choice
     # header: 'trial', 'stim', 'counterChoice (1/2)', 't_soundPlay',' t_choice', 't_Response', 'RT', 'responseButton', 'VAT_classified', ' VET_classified'])
-    writer.writerow([i+1, stimSelect[i],  
+    writer.writerow([participantID, gender, age, hearing_impairment,playing_music,limburgian_dialect, i+1, stimSelect[i],  
                     str(round(t_soundOnset, 3)), str(round(t_choice,3)), str(round(t_response,3)),
                     str(round(RT,3)), buttonPressed, VAT, VET
                     ])
