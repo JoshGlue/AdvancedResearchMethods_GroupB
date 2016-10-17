@@ -19,7 +19,7 @@ expInfo = {'participant':'' ,
 'Leeftijd': '',
 'Heb je gehoorproblemen?': ['Nee', 'Ja'], 
  'Speel je een muziekinstrument?': ['Nee', 'Ja'],
- 'Kan jij een Limburgs dialect spreken?': ['Nee', 'Ja']
+ 'Kan je een Limburgs dialect spreken?': ['Nee', 'Ja']
  }
 dlg = gui.DlgFromDict(dictionary=expInfo, title=expName)
 if dlg.OK == False: core.quit()  # user pressed cancel
@@ -32,7 +32,7 @@ gender = expInfo['Man/Vrouw']
 age = expInfo['Leeftijd']
 hearing_impairment = expInfo['Heb je gehoorproblemen?']
 playing_music = expInfo['Speel je een muziekinstrument?']
-limburgian_dialect = expInfo['Kan jij een Limburgs dialect spreken?']
+limburgian_dialect = expInfo['Kan je een Limburgs dialect spreken?']
 #------------- VARIABLES -----------------------
 
 #win = visual.Window([700,500], monitor="testMonitor", units="cm", fullscr=False)
@@ -50,11 +50,11 @@ stim1 = 'asa1343'
 # create stim list with elements from 2 - 9 (50% of stimuli)
 stim = []
 for i in range(2,10):
-    stim.append(stim1 + '_' + str(i) + '.wav')
+    stim.append(str(i))
 # extend stim list with element 1 (50% of stimuli)
 totalstim = len(stim)
 for i in range(totalstim):
-	stim.append(stim1 + '_' + str(1) + '.wav')
+	stim.append('1')
 print stim
 
 # n of repetitions for the minimal unit (ntrials equals nrep * minimal unit)
@@ -93,6 +93,7 @@ fixation = visual.ShapeStim(win,
 #instr_welcome = 'Welcome to the Task'
 #instr_1 = 'Please focus on the fixation cross. You are gonna hear sounds.... Please indicate which of the two displayed words your heard last'
 #instr_end = 'This is the end of the task.\n Thank you for participating!'
+instr_welcome = visual.TextStim(win, text='Welkom bij dit onderzoek.')
 
 instr_1 = visual.TextStim(win, text='Je krijgt twee geluidsfragmenten te horen waar "asa" wordt gezegd.'+
             ' Aan jou de taak om te kijken of jij het verschil kunt horen tussen beide geluidsfragmenten.'+
@@ -102,24 +103,6 @@ instr_1 = visual.TextStim(win, text='Je krijgt twee geluidsfragmenten te horen w
             '\n'+
             'Heb je nog vragen? Zo niet, dan kan je op de rechterpijl klikken om te beginnen. Succes!')
 instr_end = visual.TextStim(win, text = 'This is the end of the task.\n Thank you for participating!')
-
-
-# -----------Create and write GENERAL INFO file ----------
-
-datafile = open(("_INFO_morphedIdenTask_{}_{}_{}.csv".format(participantID, day, date)), 'wb')
-writer = csv.writer(datafile, delimiter=";")
-
-writer.writerow([expName])
-writer.writerow([])
-writer.writerow(['participantID', participantID])
-writer.writerow(['date', date])
-writer.writerow(['counter', counter])
-writer.writerow([])
-writer.writerow(['number of repetitions', nRep])
-writer.writerow(['total number of trials', nTrials])
-writer.writerow(['morphed stimuli', stim])
-datafile.close()
-
 
 
 
@@ -150,15 +133,15 @@ showText(win, '')       # blank
 core.wait(0.5)
 
 # open/ create outputfile
-backgroundinfo= open("{}_{}_{}_OUTPUT_limburgiantonaldifference_backgroundinfo.csv".format(participantID, day, date), 'wb')
+backgroundinfo= open("data/{}_{}_{}_limburgiantonaldifference_backgroundinfo.csv".format(participantID, day, date), 'wb')
 writer_background = csv.writer(backgroundinfo, delimiter=";")
 writer_background.writerow(['gender', 'age', 'hearing_impairment',' playing_music', 'limburgian_dialect'])
 writer_background.writerow([gender, age, hearing_impairment,playing_music,limburgian_dialect])
+backgroundinfo.close()
 
-
-outputfile= open("{}_{}_{}_OUTPUT_limburgiantonaldifference.csv".format(participantID, day, date), 'wb')
+outputfile= open("data/{}_{}_{}_OUTPUT_limburgiantonaldifference.csv".format(participantID, day, date), 'wb')
 writer = csv.writer(outputfile, delimiter=";")
-writer.writerow(['trial', 'stim', 't_soundPlay',' t_choice', 't_Response', 'RT', 'responseButton', 'Hetzelfde', 'Verschillend'])
+writer.writerow(['trial', 'stim', 't_soundPlay',' t_choice', 't_Response', 'RT', 'responseButton', 'Same', 'Different'])
 
 
 timer = core.Clock()
@@ -167,10 +150,10 @@ for i in range(len(stimSelect)):
 #for i in range(5):      # for test-run
     # timing
     timer.reset()
-    s0 = sound.Sound(value = stim1 + '_' + str(1) + '.wav', secs = 1)
+    s0 = sound.Sound(value = stim1 + '_1.wav', secs = 1)
 
     # load/prepare audio (secs is expected length but will not determine actual length? - see core.wait below)
-    s = sound.Sound(value = stimSelect[i], secs = 1)
+    s = sound.Sound(value = stim1 + '_' + stimSelect[i] + '.wav' , secs = 1)
     
     # fixation cross
     showText(win, '')
@@ -227,7 +210,7 @@ for i in range(len(stimSelect)):
     # write in output file every trial
     RT = t_response - t_choice
     # header: 'trial', 'stim', 'counterChoice (1/2)', 't_soundPlay',' t_choice', 't_Response', 'RT', 'responseButton', 'VAT_classified', ' VET_classified'])
-    writer.writerow([len(stim) + i+1, stimSelect[i],  
+    writer.writerow([i+1, stimSelect[i],  
                     str(round(t_soundOnset, 3)), str(round(t_choice,3)), str(round(t_response,3)),
                     str(round(RT,3)), buttonPressed, VAT, VET
                     ])
